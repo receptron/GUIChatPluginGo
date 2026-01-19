@@ -1,5 +1,7 @@
 # @gui-chat-plugin/go
 
+[![npm version](https://badge.fury.io/js/%40gui-chat-plugin%2Fgo.svg)](https://www.npmjs.com/package/@gui-chat-plugin/go)
+
 Go (Baduk/Weiqi) game plugin for GUI Chat applications. Play Go on a 9x9 board against an AI assistant.
 
 ## Features
@@ -104,6 +106,14 @@ yarn build
 # Lint
 yarn lint
 ```
+
+## Test Prompts
+
+Try these prompts to test the plugin:
+
+1. "Let's play Go! I'll take black"
+2. "Start a new Go game, you play first"
+3. "Place my stone at position E5"
 
 ## License
 
