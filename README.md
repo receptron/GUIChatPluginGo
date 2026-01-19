@@ -22,11 +22,16 @@ yarn add @gui-chat-plugin/go
 ### Vue Integration
 
 ```typescript
-import { plugin } from "@gui-chat-plugin/go/vue";
-import "@gui-chat-plugin/go/style.css";
+// In src/tools/index.ts
+import GoPlugin from "@gui-chat-plugin/go/vue";
 
-// Register the plugin with your GUI Chat application
-registerPlugin(plugin);
+const pluginList = [
+  // ... other plugins
+  GoPlugin,
+];
+
+// In src/main.ts
+import "@gui-chat-plugin/go/style.css";
 ```
 
 ### Core-only Usage
