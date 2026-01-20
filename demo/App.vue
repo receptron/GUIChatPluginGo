@@ -44,8 +44,14 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { plugin, executeGo } from "../src/vue";
-import type { ToolResult, ToolSample, ToolPlugin } from "gui-chat-protocol/vue";
-import type { GoArgs, GoState } from "../src/core/types";
+import type {
+  ToolResult,
+  ToolSample,
+  ToolPlugin,
+  SendTextMessageOptions,
+} from "gui-chat-protocol/vue";
+import type { GoArgs, GoState, GoClickData } from "../src/core/types";
+import { playGo } from "../src/core/logic";
 
 const currentPlugin = plugin as unknown as ToolPlugin;
 
@@ -73,8 +79,124 @@ const executeSample = async (sample: ToolSample) => {
   };
 };
 
-const handleSendMessage = (text?: string) => {
+const handleSendMessage = (text?: string, options?: SendTextMessageOptions) => {
   lastMessage.value = text || "";
-  console.log("Send message:", text);
+  console.log("Send message:", text, options);
+
+  // If data is provided (from handleCellClick), process the move
+  if (options?.data) {
+    const clickData = options.data as GoClickData;
+    processUserMove(clickData);
+  }
+};
+
+/**
+ * Process user's move and then make computer's move
+ */
+const processUserMove = (clickData: GoClickData) => {
+  const { row, col, currentState } = clickData;
+
+  // Apply user's move
+  let newState = playGo({
+    action: "move",
+    row,
+    col,
+    board: currentState.board,
+    currentSide: currentState.currentSide,
+    playerNames: currentState.playerNames,
+    capturedStones: currentState.capturedStones,
+  });
+
+  // Update result with user's move
+  result.value = {
+    ...result.value,
+    jsonData: newState,
+    uuid: `demo-${Date.now()}`,
+  };
+
+  // If it's now computer's turn and game is not over, make computer move
+  if (
+    !newState.isTerminal &&
+    !newState.error &&
+    newState.playerNames[newState.currentSide] === "computer"
+  ) {
+    // Small delay for visual feedback
+    setTimeout(() => {
+      makeComputerMove(newState);
+    }, 500);
+  }
+};
+
+/**
+ * Make a simple computer move (picks random legal move or passes)
+ */
+const makeComputerMove = (state: GoState) => {
+  // Find all empty positions
+  const emptyPositions: { row: number; col: number }[] = [];
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      if (state.board[row][col] === ".") {
+        emptyPositions.push({ row, col });
+      }
+    }
+  }
+
+  if (emptyPositions.length === 0) {
+    // No empty positions, pass
+    const newState = playGo({
+      action: "pass",
+      board: state.board,
+      currentSide: state.currentSide,
+      playerNames: state.playerNames,
+      capturedStones: state.capturedStones,
+      consecutivePasses: state.consecutivePasses,
+    });
+    result.value = {
+      ...result.value,
+      jsonData: newState,
+      uuid: `demo-${Date.now()}`,
+    };
+    return;
+  }
+
+  // Shuffle empty positions and try to find a legal move
+  const shuffled = [...emptyPositions].sort(() => Math.random() - 0.5);
+
+  for (const pos of shuffled) {
+    const testState = playGo({
+      action: "move",
+      row: pos.row,
+      col: pos.col,
+      board: state.board,
+      currentSide: state.currentSide,
+      playerNames: state.playerNames,
+      capturedStones: state.capturedStones,
+    });
+
+    if (!testState.error) {
+      // Valid move found
+      result.value = {
+        ...result.value,
+        jsonData: testState,
+        uuid: `demo-${Date.now()}`,
+      };
+      return;
+    }
+  }
+
+  // No legal moves found, pass
+  const newState = playGo({
+    action: "pass",
+    board: state.board,
+    currentSide: state.currentSide,
+    playerNames: state.playerNames,
+    capturedStones: state.capturedStones,
+    consecutivePasses: state.consecutivePasses,
+  });
+  result.value = {
+    ...result.value,
+    jsonData: newState,
+    uuid: `demo-${Date.now()}`,
+  };
 };
 </script>
