@@ -110,12 +110,12 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
-import type { ToolResult } from "gui-chat-protocol/vue";
-import type { GoState } from "../core/types";
+import type { ToolResult, SendTextMessageOptions } from "gui-chat-protocol/vue";
+import type { GoState, GoClickData } from "../core/types";
 
 const props = defineProps<{
   selectedResult: ToolResult<never, GoState> | null;
-  sendTextMessage: (text?: string) => void;
+  sendTextMessage: (text?: string, options?: SendTextMessageOptions) => void;
 }>();
 
 const gameState = ref<GoState | null>(null);
@@ -207,8 +207,15 @@ function handleCellClick(index: number): void {
   const columnLetter = columnLabels[cell.col];
   const rowNumber = cell.row + 1;
 
+  const clickData: GoClickData = {
+    row: cell.row,
+    col: cell.col,
+    currentState: gameState.value,
+  };
+
   props.sendTextMessage(
     `I want to play at ${columnLetter}${rowNumber}, which is column=${cell.col}, row=${cell.row}`,
+    { data: clickData },
   );
 }
 

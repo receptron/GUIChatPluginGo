@@ -62,3 +62,12 @@ export interface GoState {
     | { type: "pass" };
   error?: string;
 }
+
+/**
+ * Data passed from handleCellClick for testing/debugging
+ */
+export interface GoClickData {
+  row: number;
+  col: number;
+  currentState: GoState;
+}
