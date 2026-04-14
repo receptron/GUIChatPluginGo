@@ -1,6 +1,6 @@
 {
   "name": "@gui-chat-plugin/go",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Go (Baduk/Weiqi) game plugin for GUI Chat",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -37,7 +37,7 @@
     "vue": "^3.5.0"
   },
   "dependencies": {
-    "gui-chat-protocol": "^0.0.4"
+    "gui-chat-protocol": "^0.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
