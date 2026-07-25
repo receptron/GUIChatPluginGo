@@ -16,8 +16,11 @@ Go (Baduk/Weiqi) game plugin for GUI Chat applications. Play Go on a 9x9 board a
 ## Installation
 
 ```bash
-yarn add @gui-chat-plugin/go
+yarn add @gui-chat-plugin/go gui-chat-protocol
 ```
+
+> `gui-chat-protocol` is a peer dependency — install it alongside the plugin; the host application provides the runtime and this plugin only declares the compatible range.
+
 
 ## Usage
 
