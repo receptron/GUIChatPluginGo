@@ -10,10 +10,7 @@ import { playGo } from "./logic";
 export { TOOL_NAME, TOOL_DEFINITION, SYSTEM_PROMPT } from "./definition";
 export { playGo } from "./logic";
 
-export const executeGo = async (
-  _context: ToolContext,
-  args: GoArgs,
-): Promise<ToolResult<never, GoState>> => {
+export const executeGo = async (_context: ToolContext, args: GoArgs): Promise<ToolResult<never, GoState>> => {
   try {
     let command: Command;
 
@@ -31,17 +28,8 @@ export const executeGo = async (
         playerNames: { B: blackPlayer, W: whitePlayer },
       };
     } else if (args.action === "move") {
-      if (
-        typeof args.row !== "number" ||
-        typeof args.col !== "number" ||
-        !args.board ||
-        !args.currentSide ||
-        !args.playerNames ||
-        !args.capturedStones
-      ) {
-        throw new Error(
-          "Move action requires row, col, board, currentSide, playerNames, and capturedStones parameters",
-        );
+      if (typeof args.row !== "number" || typeof args.col !== "number" || !args.board || !args.currentSide || !args.playerNames || !args.capturedStones) {
+        throw new Error("Move action requires row, col, board, currentSide, playerNames, and capturedStones parameters");
       }
       command = {
         action: "move",
@@ -53,16 +41,8 @@ export const executeGo = async (
         capturedStones: args.capturedStones,
       };
     } else if (args.action === "pass") {
-      if (
-        !args.board ||
-        !args.currentSide ||
-        !args.playerNames ||
-        !args.capturedStones ||
-        typeof args.consecutivePasses !== "number"
-      ) {
-        throw new Error(
-          "Pass action requires board, currentSide, playerNames, capturedStones, and consecutivePasses parameters",
-        );
+      if (!args.board || !args.currentSide || !args.playerNames || !args.capturedStones || typeof args.consecutivePasses !== "number") {
+        throw new Error("Pass action requires board, currentSide, playerNames, capturedStones, and consecutivePasses parameters");
       }
       command = {
         action: "pass",
@@ -80,8 +60,7 @@ export const executeGo = async (
 
     // Handle invalid move
     if (state.error) {
-      const isComputerTurn =
-        state.playerNames[state.currentSide] === "computer";
+      const isComputerTurn = state.playerNames[state.currentSide] === "computer";
 
       const instructions = isComputerTurn
         ? `Invalid move attempted. You must make a valid move. Choose an empty intersection where placing a stone would not result in immediate capture (suicide rule).`
@@ -99,10 +78,7 @@ export const executeGo = async (
     if (state.lastAction.type === "new_game") {
       message = "Started a new Go game on a 9x9 board! Black (●) goes first.";
     } else if (state.lastAction.type === "move") {
-      const captureMsg =
-        state.lastAction.captured > 0
-          ? ` and captured ${state.lastAction.captured} stone${state.lastAction.captured > 1 ? "s" : ""}`
-          : "";
+      const captureMsg = state.lastAction.captured > 0 ? ` and captured ${state.lastAction.captured} stone${state.lastAction.captured > 1 ? "s" : ""}` : "";
       message = `Played at (${state.lastAction.row}, ${state.lastAction.col})${captureMsg}.`;
     } else if (state.lastAction.type === "pass") {
       message = "Passed the turn.";
@@ -137,8 +113,7 @@ export const executeGo = async (
     console.error("ERR: exception\n Go game error", error);
     return {
       message: `Go game error: ${error instanceof Error ? error.message : "Unknown error"}`,
-      instructions:
-        "Acknowledge that there was an error with the Go game and suggest trying again.",
+      instructions: "Acknowledge that there was an error with the Go game and suggest trying again.",
     };
   }
 };

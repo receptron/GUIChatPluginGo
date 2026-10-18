@@ -19,11 +19,7 @@
     <div v-if="ViewComponent" class="bg-gray-800 rounded-lg p-5 mb-5 shadow-md">
       <h2 class="text-gray-200 text-xl mb-4">View Component</h2>
       <div class="border border-gray-600 rounded h-[600px]">
-        <component
-          :is="ViewComponent"
-          :selectedResult="result"
-          :sendTextMessage="handleSendMessage"
-        />
+        <component :is="ViewComponent" :selectedResult="result" :sendTextMessage="handleSendMessage" />
       </div>
     </div>
 
@@ -44,12 +40,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { plugin, executeGo } from "../src/vue";
-import type {
-  ToolResult,
-  ToolSample,
-  ToolPlugin,
-  SendTextMessageOptions,
-} from "gui-chat-protocol/vue";
+import type { ToolResult, ToolSample, ToolPlugin, SendTextMessageOptions } from "gui-chat-protocol/vue";
 import type { GoArgs, GoState, GoClickData } from "../src/core/types";
 import { playGo } from "../src/core/logic";
 
@@ -115,11 +106,7 @@ const processUserMove = (clickData: GoClickData) => {
   };
 
   // If it's now computer's turn and game is not over, make computer move
-  if (
-    !newState.isTerminal &&
-    !newState.error &&
-    newState.playerNames[newState.currentSide] === "computer"
-  ) {
+  if (!newState.isTerminal && !newState.error && newState.playerNames[newState.currentSide] === "computer") {
     // Small delay for visual feedback
     setTimeout(() => {
       makeComputerMove(newState);
