@@ -1,6 +1,7 @@
 # @gui-chat-plugin/go
 
 [![npm version](https://badge.fury.io/js/%40gui-chat-plugin%2Fgo.svg)](https://www.npmjs.com/package/@gui-chat-plugin/go)
+[![scoria](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/receptron/GUIChatPluginGo/badges/scoria.json)](https://github.com/receptron/GUIChatPluginGo/actions/workflows/scoria.yml)
 
 Go (Baduk/Weiqi) game plugin for GUI Chat applications. Play Go on a 9x9 board against an AI assistant.
 
