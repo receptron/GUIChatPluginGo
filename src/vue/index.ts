@@ -18,24 +18,9 @@ export const plugin: ToolPlugin<never, GoState, GoArgs> = {
   samples,
 };
 
-export type {
-  Cell,
-  Side,
-  GoBoard,
-  GoCellValue,
-  GoPlayerType,
-  GoArgs,
-  GoState,
-} from "../core/types";
+export type { Cell, Side, GoBoard, GoCellValue, GoPlayerType, GoArgs, GoState } from "../core/types";
 
-export {
-  TOOL_NAME,
-  TOOL_DEFINITION,
-  SYSTEM_PROMPT,
-  executeGo,
-  pluginCore,
-  playGo,
-} from "../core/plugin";
+export { TOOL_NAME, TOOL_DEFINITION, SYSTEM_PROMPT, executeGo, pluginCore, playGo } from "../core/plugin";
 
 export { samples } from "../core/samples";
 

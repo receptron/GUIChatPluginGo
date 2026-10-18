@@ -34,12 +34,7 @@ function getOpponent(side: Side): Side {
 }
 
 // Find all stones connected to the stone at (row, col)
-function getGroup(
-  board: GoBoard,
-  row: number,
-  col: number,
-  visited: boolean[][],
-): { row: number; col: number }[] {
+function getGroup(board: GoBoard, row: number, col: number, visited: boolean[][]): { row: number; col: number }[] {
   const color = board[row][col];
   if (color === ".") return [];
 
@@ -67,10 +62,7 @@ function getGroup(
 }
 
 // Check if a group has any liberties (empty adjacent spaces)
-function hasLiberties(
-  board: GoBoard,
-  group: { row: number; col: number }[],
-): boolean {
+function hasLiberties(board: GoBoard, group: { row: number; col: number }[]): boolean {
   for (const { row, col } of group) {
     for (const [dr, dc] of DIRECTIONS) {
       const r = row + dr;
@@ -84,10 +76,7 @@ function hasLiberties(
 }
 
 // Remove captured stones and return count
-function removeCapturedStones(
-  board: GoBoard,
-  opponentSide: Side,
-): { board: GoBoard; capturedCount: number } {
+function removeCapturedStones(board: GoBoard, opponentSide: Side): { board: GoBoard; capturedCount: number } {
   const newBoard = copyBoard(board);
   const visited: boolean[][] = Array(BOARD_SIZE)
     .fill(null)
@@ -113,12 +102,7 @@ function removeCapturedStones(
 }
 
 // Check if a move is legal (not suicide rule)
-function isLegalMove(
-  board: GoBoard,
-  row: number,
-  col: number,
-  side: Side,
-): boolean {
+function isLegalMove(board: GoBoard, row: number, col: number, side: Side): boolean {
   // Position must be empty
   if (board[row][col] !== ".") {
     return false;
@@ -130,10 +114,7 @@ function isLegalMove(
 
   // First, check if this move captures opponent stones
   const opponentSide = getOpponent(side);
-  const { board: boardAfterCapture } = removeCapturedStones(
-    testBoard,
-    opponentSide,
-  );
+  const { board: boardAfterCapture } = removeCapturedStones(testBoard, opponentSide);
 
   // Then check if our own group has liberties (suicide rule)
   const visited: boolean[][] = Array(BOARD_SIZE)
@@ -144,21 +125,13 @@ function isLegalMove(
   return hasLiberties(boardAfterCapture, ourGroup);
 }
 
-function makeMove(
-  board: GoBoard,
-  row: number,
-  col: number,
-  side: Side,
-): { newBoard: GoBoard; capturedCount: number } {
+function makeMove(board: GoBoard, row: number, col: number, side: Side): { newBoard: GoBoard; capturedCount: number } {
   const newBoard = copyBoard(board);
   newBoard[row][col] = side;
 
   // Remove captured opponent stones
   const opponentSide = getOpponent(side);
-  const { board: finalBoard, capturedCount } = removeCapturedStones(
-    newBoard,
-    opponentSide,
-  );
+  const { board: finalBoard, capturedCount } = removeCapturedStones(newBoard, opponentSide);
 
   return { newBoard: finalBoard, capturedCount };
 }
@@ -235,10 +208,7 @@ function calculateTerritory(board: GoBoard): { B: number; W: number } {
   return { B: territoryB, W: territoryW };
 }
 
-function determineWinner(
-  board: GoBoard,
-  capturedStones: { B: number; W: number },
-): Side | "draw" | null {
+function determineWinner(board: GoBoard, capturedStones: { B: number; W: number }): Side | "draw" | null {
   const counts = countStones(board);
   const territory = calculateTerritory(board);
 
@@ -271,13 +241,7 @@ export function playGo(cmd: Command): GoState {
   }
 
   if (cmd.action === "pass") {
-    const {
-      board,
-      currentSide,
-      playerNames,
-      capturedStones,
-      consecutivePasses,
-    } = cmd;
+    const { board, currentSide, playerNames, capturedStones, consecutivePasses } = cmd;
     const nextSide = getOpponent(currentSide);
     const counts = countStones(board);
     const newConsecutivePasses = consecutivePasses + 1;

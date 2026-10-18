@@ -56,10 +56,7 @@ export interface GoState {
   isTerminal: boolean;
   winner: Side | "draw" | null;
   consecutivePasses: number;
-  lastAction:
-    | { type: "new_game" }
-    | { type: "move"; row: number; col: number; captured: number }
-    | { type: "pass" };
+  lastAction: { type: "new_game" } | { type: "move"; row: number; col: number; captured: number } | { type: "pass" };
   error?: string;
 }
 
