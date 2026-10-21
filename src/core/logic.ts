@@ -3,6 +3,7 @@
  */
 
 import type { Cell, Side, GoBoard, Command, GoState } from "./types";
+import { isOnBoard } from "./position";
 
 const BOARD_SIZE = 9;
 
@@ -26,7 +27,7 @@ function copyBoard(board: GoBoard): GoBoard {
 }
 
 function isInBounds(row: number, col: number): boolean {
-  return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE;
+  return isOnBoard(row, col, BOARD_SIZE);
 }
 
 function getOpponent(side: Side): Side {
@@ -103,8 +104,8 @@ function removeCapturedStones(board: GoBoard, opponentSide: Side): { board: GoBo
 
 // Check if a move is legal (not suicide rule)
 function isLegalMove(board: GoBoard, row: number, col: number, side: Side): boolean {
-  // Position must be empty
-  if (board[row][col] !== ".") {
+  // Position must be on the board and empty
+  if (!isInBounds(row, col) || board[row][col] !== ".") {
     return false;
   }
 
